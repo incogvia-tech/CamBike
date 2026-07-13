@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bike AR Viewer</title>
+    <meta
+      name="description"
+      content="Android AR preview for 3D bike models."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <script
+      type="module"
+      src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"
+    ></script>
+  </head>
+  <body>
+    <main class="viewer-shell">
+      <section class="stage" aria-label="3D bike preview">
+        <model-viewer
+          src="./assets/royal-enfield-bike.glb"
+          alt="3D model of a Royal Enfield motorcycle"
+          ar
+          ar-modes="scene-viewer webxr"
+          ar-scale="fixed"
+          camera-controls
+          touch-action="pan-y"
+          auto-rotate
+          auto-rotate-delay="1200"
+          rotation-per-second="22deg"
+          shadow-intensity="1"
+          shadow-softness="0.8"
+          exposure="1"
+          environment-image="neutral"
+          camera-orbit="35deg 72deg auto"
+          min-camera-orbit="auto 35deg auto"
+          max-camera-orbit="auto 88deg auto"
+          field-of-view="35deg"
+        >
+          <button class="ar-button" slot="ar-button" type="button">
+            View in your room
+          </button>
+
+          <div class="loading" slot="poster">
+            <span></span>
+            Loading bike
+          </div>
+        </model-viewer>
+      </section>
+
+      <aside class="panel" aria-label="AR controls">
+        <p class="eyebrow">Android AR</p>
+        <h1 id="bike-title">Royal Enfield</h1>
+        <p class="summary">
+          Choose a bike, rotate it, zoom in, and launch Android Scene Viewer.
+        </p>
+        <div class="model-tabs" role="group" aria-label="Choose bike model">
+          <button
+            class="model-tab is-active"
+            type="button"
+            data-model="royal-enfield"
+            aria-pressed="true"
+          >
+            Royal Enfield
+          </button>
+          <button
+            class="model-tab"
+            type="button"
+            data-model="tvs-raider"
+            aria-pressed="false"
+          >
+            TVS Raider
+          </button>
+        </div>
+        <div class="actions">
+          <button class="primary-action" type="button" id="launch-ar">
+            Open AR
+          </button>
+          <button class="secondary-action" type="button" id="reset-view">
+            Reset view
+          </button>
+        </div>
+      </aside>
+    </main>
+
+    <script>
+      const viewer = document.querySelector("model-viewer");
+      const title = document.querySelector("#bike-title");
+      const modelTabs = document.querySelectorAll(".model-tab");
+      const launchButton = document.querySelector("#launch-ar");
+      const modelArButton = document.querySelector(".ar-button");
+      const resetButton = document.querySelector("#reset-view");
+      const models = {
+        "royal-enfield": {
+          title: "Royal Enfield",
+          src: "./assets/royal-enfield-bike.glb",
+          alt: "3D model of a Royal Enfield motorcycle",
+        },
+        "tvs-raider": {
+          title: "TVS Raider",
+          src: "./assets/tvs-raider.glb",
+          alt: "3D model of a TVS Raider motorcycle",
+        },
+      };
+
+      function resetCamera() {
+        viewer.cameraOrbit = "35deg 72deg auto";
+        viewer.fieldOfView = "35deg";
+        viewer.jumpCameraToGoal();
+      }
+
+      modelTabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          const model = models[tab.dataset.model];
+          viewer.src = model.src;
+          viewer.alt = model.alt;
+          title.textContent = model.title;
+          modelTabs.forEach((button) => {
+            const active = button === tab;
+            button.classList.toggle("is-active", active);
+            button.setAttribute("aria-pressed", String(active));
+          });
+          resetCamera();
+        });
+      });
+
+      launchButton.addEventListener("click", () => modelArButton.click());
+      resetButton.addEventListener("click", resetCamera);
+    </script>
+  </body>
+</html>
