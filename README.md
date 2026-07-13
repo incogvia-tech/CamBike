@@ -2,6 +2,8 @@
 
 Static `<model-viewer>` page for previewing bike GLB files and launching Android AR through Scene Viewer/WebXR.
 
+The deployed page is lightweight. It loads the large GLB files from GitHub raw URLs instead of bundling them into the Vercel build output.
+
 Included models:
 
 - Royal Enfield
