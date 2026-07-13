@@ -16,3 +16,11 @@ node server.js
 Open `http://localhost:4173`.
 
 For Android testing, serve the project on a URL your phone can reach, then open it in Chrome, choose a bike, and tap `View in your room` or `Open AR`.
+
+## Deploy
+
+Vercel builds the static site into `dist`:
+
+```sh
+npm run build
+```
