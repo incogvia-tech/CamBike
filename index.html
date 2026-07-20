@@ -95,17 +95,27 @@
           title: "Royal Enfield",
           src: "https://raw.githubusercontent.com/incogvia-tech/CamBike/main/assets/royal-enfield-bike.glb",
           alt: "3D model of a Royal Enfield motorcycle",
+          // Royal Enfield is already true life-size in the GLB
+          scale: "1 1 1",
+          orbit: "35deg 72deg auto",
+          fov: "35deg",
         },
         "tvs-raider": {
           title: "TVS Raider",
           src: "https://raw.githubusercontent.com/incogvia-tech/CamBike/main/assets/tvs-raider.glb",
           alt: "3D model of a TVS Raider motorcycle",
+          // TVS Raider bounding box is ~8x smaller than Royal Enfield;
+          // multiply by 8.2 so it renders at the same physical size in AR.
+          scale: "8.2 8.2 8.2",
+          orbit: "35deg 72deg auto",
+          fov: "35deg",
         },
       };
 
-      function resetCamera() {
-        viewer.cameraOrbit = "35deg 72deg auto";
-        viewer.fieldOfView = "35deg";
+      function resetCamera(model) {
+        const m = model || models[document.querySelector('.model-tab.is-active')?.dataset.model] || models['royal-enfield'];
+        viewer.cameraOrbit = m.orbit;
+        viewer.fieldOfView = m.fov;
         viewer.jumpCameraToGoal();
       }
 
@@ -114,13 +124,14 @@
           const model = models[tab.dataset.model];
           viewer.src = model.src;
           viewer.alt = model.alt;
+          viewer.scale = model.scale;
           title.textContent = model.title;
           modelTabs.forEach((button) => {
             const active = button === tab;
             button.classList.toggle("is-active", active);
             button.setAttribute("aria-pressed", String(active));
           });
-          resetCamera();
+          resetCamera(model);
         });
       });
 
